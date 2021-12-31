@@ -1,0 +1,36 @@
+#N canvas 178 99 521 501 10;
+#X obj 144 283 inlet init;
+#X obj 226 283 inlet bang;
+#X obj 62 323 list prepend;
+#X obj 89 303 t a;
+#X obj 62 343 t b a;
+#X obj 226 363 symbol \$1;
+#X obj 226 383 list;
+#X obj 226 403 list trim;
+#X obj 226 423 outlet;
+#X obj 326 423 outlet;
+#X text 44 22 makelist produces a list of atoms prepended with a symbol
+of the developers choice.;
+#X text 59 74 \$1 - the symbol prepend to the list;
+#X obj 62 283 inlet data;
+#X obj 308 283 inlet new-prepended-symbol;
+#X text 38 104 1- send bang to second inlet to clear the list \; 2-
+send an atom to the first inlet \, and when it is done \, it will send
+a band out the second outlet to indicate that the next element should
+be sent \; 3- when you have finished your list of atoms \, send a bang
+to the third inlet to output the completed list to the first outlet
+\; 4- use this to change the symbol for the output list (prepended
+to the list);
+#X connect 0 0 2 1;
+#X connect 0 0 6 1;
+#X connect 1 0 5 0;
+#X connect 2 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 1;
+#X connect 4 0 9 0;
+#X connect 4 1 6 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 8 0;
+#X connect 12 0 2 0;
+#X connect 13 0 5 1;

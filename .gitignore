@@ -1,0 +1,4 @@
+.DS_Store
+*.o
+*.pd_darwin
+__pycache__

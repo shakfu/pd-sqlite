@@ -1,0 +1,237 @@
+#N canvas 353 32 482 260 10;
+#X text 28 18 This example shows how to use the [sqlite3query] object
+to create a sql prepared statement. It also shows how to use Placeholders
+to handle statements with variable data.;
+#X obj 115 85 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 115 105 symbol data2;
+#N canvas 354 67 614 614 data2 0;
+#X obj 10 10 cnv 15 340 175 empty empty Create_Data_Table 20 12 0 14
+-233017 -66577 0;
+#X obj 18 31 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 10 190 cnv 15 240 175 empty empty Drop_Data_Table 20 12 0 14
+-233017 -66577 0;
+#X obj 19 218 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 277 302 cnv 15 130 105 empty empty Count_Data 20 12 0 14 -233017
+-66577 0;
+#X obj 257 189 cnv 15 150 110 empty empty Fill_Data_Table 20 12 0 14
+-233017 -66577 0;
+#X obj 410 189 cnv 15 180 150 empty empty Iterate_Data_Table 20 12
+0 14 -233017 -66577 0;
+#X msg 64 69 create table data (a double \, b double);
+#X msg 42 298 drop table data;
+#X obj 65 278 s \$0-finalize-data-table;
+#X obj 19 238 t b b b;
+#X obj 64 90 s data2-sql;
+#X obj 42 318 s data2-sql;
+#X obj 40 110 s data2;
+#X obj 19 338 s data2;
+#X msg 65 258 finalize;
+#X obj 18 49 t b b b;
+#N canvas 40 347 682 361 showdata 0;
+#X obj 228 148 unpack 0 0 0;
+#X floatatom 142 164 8 0 0 0 RowID - -;
+#X floatatom 142 180 8 0 0 0 a - -;
+#X floatatom 142 196 8 0 0 0 b - -;
+#X obj 228 98 until;
+#X obj 105 124 bng 15 250 50 0 empty empty All 17 7 0 10 -262144 -1
+-1;
+#X obj 105 142 bng 15 250 50 0 empty empty Step 17 7 0 10 -262144 -1
+-1;
+#X obj 228 128 sqlite3query select rowid \, * from data;
+#X obj 491 148 s \$0-showdata-stop-data;
+#X obj 260 67 r \$0-showdata-stop-data;
+#X obj 356 105 r \$0-finalize-data-table;
+#X obj 346 85 r data2-prepare;
+#X obj 155 124 bng 15 350 50 0 empty \$0-showdata-stop-data Done 17
+7 0 10 -262144 -1 -1;
+#X obj 359 148 s \$0-errors;
+#X obj 155 142 bng 15 250 50 0 empty empty Reset 17 7 0 10 -262144
+-1 -1;
+#X msg 201 60 reset;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 0 2 3 0;
+#X connect 4 0 7 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X connect 7 1 13 0;
+#X connect 7 2 8 0;
+#X connect 9 0 4 1;
+#X connect 10 0 7 0;
+#X connect 11 0 7 0;
+#X connect 14 0 15 0;
+#X connect 15 0 7 0;
+#X coords 0 -1 1 1 105 115 1 100 100;
+#X restore 444 213 pd showdata;
+#X obj 18 130 symbol data2;
+#X obj 365 99 sqlite3db-master data2;
+#X msg 18 150 \; \$1-prepare use \$1;
+#N canvas 0 22 593 305 count 0;
+#X msg 224 103 reset;
+#X obj 192 83 t b b;
+#X obj 192 143 sqlite3query select count(*) from data;
+#X obj 103 141 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 144 143 5 0 0 0 - - -;
+#X obj 309 115 r \$0-finalize-data-table;
+#X obj 299 95 r data2-prepare;
+#X obj 299 190 s \$0-errors;
+#X obj 111 29 loadbang;
+#X obj 111 51 -1;
+#X connect 0 0 2 0;
+#X connect 1 0 2 0;
+#X connect 1 1 0 0;
+#X connect 2 0 4 0;
+#X connect 2 1 7 0;
+#X connect 3 0 1 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 8 0 9 0;
+#X connect 9 0 4 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 308 333 pd count;
+#N canvas 165 218 537 445 add-data 0;
+#X obj 211 134 cnv 15 145 30 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X obj 122 349 cnv 15 145 30 empty empty empty 20 12 0 14 -228856 -66577
+0;
+#X obj 198 215 until;
+#X floatatom 22 46 5 0 0 1 rows - -;
+#X obj 19 207 r \$0-finalize-data-table;
+#X obj 218 141 sqlite3query begin;
+#X obj 126 357 sqlite3query commit;
+#X obj 198 295 sqlite3query insert into data values (?1 \, ?2);
+#X obj 126 105 t b f b;
+#N canvas 45 406 450 300 make-data 0;
+#X obj 76 45 inlet;
+#X obj 76 65 t b b;
+#X obj 76 205 outlet;
+#X obj 76 185 pack 0 0;
+#X obj 108 95 random 1;
+#X obj 108 115 / 1;
+#X msg 148 47 1e+06;
+#X obj 76 145 random 1;
+#X obj 76 165 / 1;
+#X obj 148 27 loadbang;
+#X connect 0 0 1 0;
+#X connect 1 0 7 0;
+#X connect 1 1 4 0;
+#X connect 3 0 2 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 1;
+#X connect 6 0 4 1;
+#X connect 6 0 5 1;
+#X connect 6 0 7 1;
+#X connect 6 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 3 0;
+#X connect 9 0 6 0;
+#X restore 230 265 pd make-data;
+#X obj 198 235 t b b;
+#X obj 9 187 r data2-prepare;
+#X text 106 54 This inserts random values for 'a' and 'b' \, based
+on the number of requested rows.;
+#X text 105 12 The two highlighted queries are used to create an sql
+transaction. This allows for faster response from the database when
+inserting data.;
+#X obj 279 390 s \$0-errors;
+#X connect 2 0 10 0;
+#X connect 3 0 8 0;
+#X connect 4 0 5 0;
+#X connect 4 0 7 0;
+#X connect 4 0 6 0;
+#X connect 5 1 14 0;
+#X connect 6 1 14 0;
+#X connect 7 1 14 0;
+#X connect 8 0 6 0;
+#X connect 8 1 2 0;
+#X connect 8 2 5 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 10 1 9 0;
+#X connect 11 0 5 0;
+#X connect 11 0 7 0;
+#X connect 11 0 6 0;
+#X coords 0 -1 1 1 85 60 1 10 10;
+#X restore 295 224 pd add-data;
+#X obj 374 19 r \$0-errors;
+#X obj 374 40 print DB-ERROR:;
+#N canvas 194 228 507 437 query-life-cycle 0;
+#X text 35 25 A Query can in one of several states:;
+#X text 50 50 A. Unprepared - this is when a statement is not associated
+with any database \, and as such \, has no function. Anytime new SQL
+is submitted to a Queries "Cold" inlet \, it puts the Query into an
+"Unprepared" state.;
+#X text 50 129 B. Prepared - this is when a statement has been "told"
+to 'use <db-key>' \, and the statement is associated with a database
+(and any of the required tables). When in this state \, a query is
+ready to accept a list (float or symbol \, too) for the placeholders
+in the SQL statement (or in the case where there is no data to place
+\, a 'reset' message \, for things like 'select * from table');
+#X text 52 243 C. Placed - this is just after a list (float or symbol)
+is sent to the left inlet. This puts the associated values from the
+list into the SQL place holders. Or in the case of a 'reset' message
+\, it will "rewind" the statement so the next result set returned is
+the first from the query.;
+#X text 51 335 D. Executing - this state is generally after the values
+have been placed \, and one or more 'bang' messages are sent to the
+left inlet \, and it ends when a bang has left the right outlet. If
+more bangs are submitted after this state has completed \, it will
+submit the statement again \, as if it were a new query.;
+#X restore 425 364 pd query-life-cycle;
+#X text 34 30 (1);
+#X text 283 333 (2);
+#X text 273 223 (3);
+#X text 283 353 (4);
+#X text 8 412 1 Create the table \; 2 Click the Count button \, this
+should tell you there are 0 records in the table \; 3 Enter the number
+of rows to add to the table in the "rows" number box \; 4 Click the
+Count Button again \, and it should show the number of rows you entered
+in the Fill \; 5 You can either then Click the Iterate "All" or "Step"
+buttons to extract the data \; 6 If you want to Drop the table \, click
+on that button. Do note \, that if you don't send a finalize message
+to all of the associated query objects \, it won't let you drop this
+table.;
+#X text 423 223 (5);
+#X text 34 216 (6);
+#X connect 1 0 16 0;
+#X connect 3 0 10 0;
+#X connect 7 0 11 0;
+#X connect 8 0 12 0;
+#X connect 10 0 14 0;
+#X connect 10 1 8 0;
+#X connect 10 2 15 0;
+#X connect 15 0 9 0;
+#X connect 16 0 18 0;
+#X connect 16 1 13 0;
+#X connect 16 2 7 0;
+#X connect 18 0 20 0;
+#X connect 23 0 24 0;
+#X restore 278 94 pd data2;
+#X msg 115 125 \; \$1 open :memory: \; pd-\$1 vis 1 \;;
+#X obj 65 175 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 65 195 symbol;
+#X msg 65 215 \; \$1 close \;;
+#X obj 268 154 cnv 15 130 36 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 278 124 r data2;
+#X obj 368 124 r data2-sql;
+#X obj 298 204 print data2-completed;
+#X obj 278 224 print data2;
+#X obj 278 164 sqlite3db data2;
+#X text 92 83 (1);
+#X text 42 173 (2);
+#X connect 1 0 2 0;
+#X connect 2 0 4 0;
+#X connect 2 0 6 1;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 9 0 13 0;
+#X connect 10 0 13 1;
+#X connect 13 0 12 0;
+#X connect 13 1 11 0;

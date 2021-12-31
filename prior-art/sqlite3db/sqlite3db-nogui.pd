@@ -1,0 +1,36 @@
+#N canvas 494 81 449 282 10;
+#X obj 263 20 r \$1;
+#X obj 344 20 r \$1-sql;
+#X obj 263 50 sqlite3db \$1;
+#X obj 263 120 s;
+#X obj 344 120 s;
+#X obj 281 80 r \$1-out;
+#X obj 362 80 r \$1-done;
+#X obj 31 28 loadbang;
+#X obj 31 48 symbol \$1;
+#X obj 31 68 t a a;
+#X msg 63 88 symbol \$1-completed;
+#X obj 63 108 s \$1-done;
+#X msg 31 128 symbol \$1-data;
+#X obj 31 148 s \$1-out;
+#X obj 281 100 symbol;
+#X obj 362 100 symbol;
+#X text 20 180 See sqlite3db-help.pd inherited messages sent to \$1.
+\; \; \$1-sql <complete-sql-statement> - can't use placeholders \;
+\$1-out <symbol> - sets destination of returned query data \; --defaults
+to '\$1-data' \; \$1-done <symbol> - send bang to when execution complete
+\; --defaults to '\$1-completed' \;;
+#X connect 0 0 2 0;
+#X connect 1 0 2 1;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 5 0 14 0;
+#X connect 6 0 15 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 12 0;
+#X connect 9 1 10 0;
+#X connect 10 0 11 0;
+#X connect 12 0 13 0;
+#X connect 14 0 3 1;
+#X connect 15 0 4 1;

@@ -1,0 +1,178 @@
+#N canvas 226 22 798 444 10;
+#X obj 2 2 cnv 15 138 110 empty \$0-cnv-r db 2 8 0 14 -233017 -66577
+0;
+#X obj 4 22 bng 15 250 50 0 \$1-open \$1-open-r Open 17 8 0 12 -262141
+-1 -1;
+#X obj 4 40 bng 15 250 50 0 \$1-create \$1-create-r Create 17 8 0 12
+-262144 -1 -1;
+#X obj 4 58 bng 15 250 50 0 \$0-memory \$0-memory-r Memory 17 8 0 12
+-262144 -1 -1;
+#X obj 4 76 bng 15 250 50 0 \$1-init-db \$0-init-db-r Init_DB 17 8
+0 12 -262144 -1 -1;
+#X obj 72 40 bng 15 250 50 0 \$0-clear \$0-clear-r Clear 17 8 0 12
+-262144 -1 -1;
+#X obj 72 58 bng 15 250 50 0 \$0-report \$0-report-r Report 17 8 0
+12 -262144 -1 -1;
+#X obj 72 76 bng 15 250 50 0 \$0-error \$0-error-r Error 17 8 0 12
+-262141 -1 -1;
+#X obj 151 4 loadbang;
+#X obj 196 44 symbol \$1;
+#X obj 151 44 f \$0;
+#X obj 151 64 pack f s;
+#X msg 151 84 \; \$1-cnv-r label \$2 \;;
+#X obj 17 186 r \$1-open;
+#X obj 27 226 r \$1-create;
+#X obj 17 385 s \$1;
+#X msg 47 355 close;
+#X obj 17 206 openpanel;
+#X obj 27 246 savepanel;
+#X obj 37 286 symbol :memory:;
+#X msg 17 316 open \$1;
+#X obj 72 22 bng 15 250 50 0 \$1 \$1-bang-r Bang 17 8 0 12 -262144
+-1 -1;
+#X obj 234 244 inlet control;
+#X obj 338 244 inlet sql;
+#X obj 318 355 outlet complete;
+#X obj 234 375 outlet results-or-status;
+#N canvas 142 278 619 426 do-gui 0;
+#X obj 47 31 inlet;
+#X obj 47 61 route error;
+#X obj 47 172 * -1;
+#X obj 47 192 + -1;
+#X msg 47 212 color \$1 -1 -1;
+#X obj 47 142 1.67117e+07;
+#X obj 121 121 1.67772e+07;
+#X obj 47 122 t b;
+#X obj 121 101 t b;
+#X obj 361 101 route open close;
+#X obj 361 141 65280;
+#X obj 415 141 1.67772e+07;
+#X obj 415 121 t b;
+#X obj 361 173 * -1;
+#X obj 361 193 + -1;
+#X msg 361 213 color \$1 -1 -1;
+#X obj 361 232 s \$1-open-r;
+#X obj 361 121 t b;
+#X obj 47 231 s \$0-error-r;
+#X obj 423 56 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 150 53 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 223 153 list prepend label;
+#X obj 223 173 list trim;
+#X obj 223 193 s \$0-filename-r;
+#X obj 151 76 r \$0-error;
+#X connect 0 0 1 0;
+#X connect 1 0 7 0;
+#X connect 1 1 8 0;
+#X connect 1 1 9 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 18 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 5 0;
+#X connect 8 0 6 0;
+#X connect 9 0 17 0;
+#X connect 9 0 21 0;
+#X connect 9 1 12 0;
+#X connect 9 1 21 0;
+#X connect 10 0 13 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 17 0 10 0;
+#X connect 19 0 12 0;
+#X connect 20 0 8 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
+#X connect 24 0 8 0;
+#X restore 244 355 pd do-gui;
+#X obj 174 203 s \$1;
+#X msg 174 143 report;
+#X msg 204 183 clear;
+#X obj 37 266 r \$0-memory;
+#X obj 47 335 r \$0-close;
+#X obj 174 123 r \$0-report;
+#X obj 204 163 r \$0-clear;
+#X obj 124 384 symbol \$1;
+#X obj 234 264 s \$1;
+#X obj 338 264 s \$1-sql;
+#X obj 258 293 sqlite3db-nogui \$1;
+#X obj 151 24 t b b b;
+#X obj 318 325 r \$1-completed;
+#X obj 234 324 r \$1-data;
+#X text 335 8 a wrapper around an [sqlite3db] object \; \; has the
+following received message symbols \; \; inherits everything from [sqlite3db-nogui]
+\; \; \$1-sql - used to submit sql to database for processing \; --(can
+only submit a single statement to execute) \; --(when buffer successfully
+executed \, the text is deleted) \; \; \$1-open - calls the open panel
+to open an existing file \; \$1-create - calls the save panel to write
+a new file \; \; has the following sent message symbols \; \; \$1-use
+- intercepted by query and rowid objects to compile the sql code currently
+in its buffer \, an [sqlite3query] object implements a 'stored procedure'
+\;;
+#X msg 124 404 \; \$1-prepare use \$1;
+#X obj 4 94 bng 15 250 50 0 \$0-close \$0-close-r Close 17 8 0 12 -262144
+-1 -1;
+#X obj 72 94 bng 15 250 50 0 \$0-prepare \$1-prepare-r Prepare 17 8
+0 12 -262144 -1 -1;
+#N canvas 250 419 450 300 drop-all-tables 0;
+#X obj 44 121 sqlite3query select tbl_name from sqlite_master;
+#X msg 44 211 \; \$1-sql drop table \$2 \; \$1 bang \;;
+#X obj 44 86 until;
+#X obj 44 36 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X msg 104 86 reset;
+#X obj 44 56 t b b;
+#X obj 44 141 t b a;
+#X obj 76 161 symbol;
+#X obj 44 161 \$0;
+#X obj 44 191 pack f s;
+#X connect 0 0 6 0;
+#X connect 0 2 2 1;
+#X connect 2 0 0 0;
+#X connect 3 0 5 0;
+#X connect 4 0 0 0;
+#X connect 5 0 2 0;
+#X connect 5 1 4 0;
+#X connect 6 0 8 0;
+#X connect 6 1 7 0;
+#X connect 7 0 9 1;
+#X connect 8 0 9 0;
+#X connect 9 0 1 0;
+#X restore 497 270 pd drop-all-tables;
+#X obj 2 113 cnv 15 138 19 empty \$0-filename-r empty 2 8 0 14 -233017
+-66577 0;
+#X obj 124 364 t b;
+#X obj 124 344 r \$0-prepare;
+#X connect 8 0 38 0;
+#X connect 9 0 11 1;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 13 0 17 0;
+#X connect 14 0 18 0;
+#X connect 16 0 15 0;
+#X connect 17 0 20 0;
+#X connect 18 0 20 0;
+#X connect 19 0 20 0;
+#X connect 20 0 15 0;
+#X connect 22 0 35 0;
+#X connect 23 0 36 0;
+#X connect 28 0 27 0;
+#X connect 29 0 27 0;
+#X connect 30 0 19 0;
+#X connect 31 0 16 0;
+#X connect 32 0 28 0;
+#X connect 33 0 29 0;
+#X connect 34 0 42 0;
+#X connect 38 0 10 0;
+#X connect 38 1 9 0;
+#X connect 39 0 24 0;
+#X connect 40 0 26 0;
+#X connect 40 0 25 0;
+#X connect 47 0 34 0;
+#X connect 48 0 47 0;
+#X coords 0 -1 1 1 140 132 2 1 1;

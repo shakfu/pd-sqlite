@@ -1,0 +1,46 @@
+#N canvas 215 215 751 478 10;
+#X obj 25 159 bng 15 250 50 0 empty empty Hit-Me! 21 8 0 18 -262144
+-1 -1;
+#X obj 25 205 symbol data1;
+#X text 356 391 <- this enters a select statement in the buffer \;
+<- executes and returns the first result set \; <- executes and returns
+the second result set \; <- executes and bang out right indicates results
+end \; <- closes the in memory database \;;
+#X obj 25 225 pack s 0;
+#X obj 40 185 tgl 15 0 empty empty tagged 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 356 247 <- opens an in-memory database \; <- turns on the result
+set tagging with field names \; <- insert an sql statement into the
+buffer \; <- executes the sql statement in the buffer \; <- insert
+some data into the table we created above \; <- execute the sql statement
+\; <- get the rowid of the last insertion \;;
+#X msg 25 245 \; \$1 open :memory: \; \$1 tagged \$2 \; \$1-sql create
+table data(a double \, b double) \; \$1 bang \; \$1-sql insert into
+data values(1.1 \, 2.2) \; \$1 bang \; \$1 rowid \; \$1-sql insert
+into data values(3.3 \, 4.4) \; \$1 bang \; \$1 rowid \; \$1-sql select
+count(a) from data \; \$1 bang \; \$1-sql select * from data \; \$1
+bang \; \$1 bang \; \$1 bang \; \$1 close \;;
+#X text 198 142 a useful method of testing out some SQL on your database
+is to use the 'sendpanel' (for messages) to insert the SQL (one statement
+at a time \, no placeholders) \, and then bang on the database object
+for each expected result from the query.;
+#X text 251 49 [sqlite3db <pd-key>] - raw database object \; [sqlite3db-nogui
+<pd-key>] - adds message points and redirectable output \; [sqlite3db-gui
+<pd-key>] - adds a Pd graphical interface (for developers \, not users)
+\;;
+#X obj 40 64 cnv 15 130 36 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#X obj 50 134 print data1;
+#X obj 70 114 print data1-completed;
+#X obj 50 74 sqlite3db data1;
+#X obj 50 34 r data1;
+#X obj 140 34 r data1-sql;
+#X text 11 11 SQLite3db_v0.02;
+#X connect 0 0 1 0;
+#X connect 1 0 3 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 1;
+#X connect 12 0 10 0;
+#X connect 12 1 11 0;
+#X connect 13 0 12 0;
+#X connect 14 0 12 1;

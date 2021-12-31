@@ -1,0 +1,28 @@
+#N canvas 111 122 739 385 10;
+#X obj 21 276 symbol done;
+#X obj 11 236 sqlite3query select * from sqlite_master;
+#X text 17 152 create table sqlite_master(type text \, name text \,
+tbl_name text \, rootpage integer \, sql text);
+#X text 17 64 as Sqlite3 uses an internal table to keep data about
+the tables you have defined in a database \, you can reference this
+table \, 'sqlite_master' \, to discover information about a database.
+This table is read-only \, but will change depending on the definitions
+you make (via 'create/drop/alter' statements).;
+#X obj 11 36 bng 15 250 50 0 empty empty Tables 17 7 0 12 -262144 -1
+-1;
+#X obj 148 276 print \$1-sqlite3db-master;
+#X obj 11 306 print \$1-sqlite3db-master;
+#X obj 21 186 r \$1-prepare;
+#X obj 306 211 sqlite3query select sql from sqlite_master;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 1 1 5 0;
+#X connect 1 2 0 0;
+#X connect 4 0 1 0;
+#X connect 4 0 8 0;
+#X connect 7 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 1 5 0;
+#X connect 8 2 0 0;
+#X coords 0 -1 1 1 85 60 1 1 1;
