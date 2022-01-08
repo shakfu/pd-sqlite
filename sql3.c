@@ -1,12 +1,11 @@
 // #include <stdbool.h>
 #include <string.h>
-
+#include <stdlib.h>
 #include "m_pd.h"
 
 #include <sqlite3.h>
 
 
-#define SYMBOL_LENGTH 100
 #define DEBUG(x) x
 // #define DEBUG(x)
 
@@ -28,6 +27,7 @@ typedef struct _sql3 {
 
     // sqlite-specific
     char db_path[MAXPDSTRING];
+    char sql_buffer[MAXPDSTRING];
     sqlite3 *db;
     db_state db_state;
 } t_sql3;
@@ -39,6 +39,8 @@ typedef struct _sql3 {
 
 void path_combine(char* destination, const char* path1, const char* path2)
 {
+    // function from stack overflow
+    // https://stackoverflow.com/questions/3142365/combine-directory-and-file-path-c/3142698
     if(path1 == NULL && path2 == NULL) {
         strcpy(destination, "");;
     }
@@ -66,10 +68,11 @@ void path_combine(char* destination, const char* path1, const char* path2)
         strcat(destination, path2);
     }
 }
-// prototypes
+
+// forward declarations
 // ---------------------------------------------------------------------------
 void sql3_close(t_sql3 *x);
-
+void sql3_free(t_sql3 *x);
 
 
 // class methods (typed)
@@ -78,16 +81,41 @@ void sql3_symbol(t_sql3 *x, t_symbol *s) {
     post("s: %s", s->s_name);
 
     sqlite3_stmt *res;
-    int rc;
 
     if (x->db_state != OPEN) {
         pd_error(x, "database needs to be open first");
         return;
     }
-    
+
+    int i, j;
+
+    int length = strlen(s->s_name);
+    char *buf = malloc(length * sizeof(char));
+
+    strcpy(buf, s->s_name);
+
+    // clear sql_buffer
+    memset(x->sql_buffer, 0, MAXPDSTRING);
+
+    j = 0;
+    for (i = 0; i < length; i++) {
+        // remove escape `\` required for commas
+        // this escape cleaning code is from sql3db.c
+        // written by Michael J McGonagle 
+        if (buf[i] != '\\') {
+            x->sql_buffer[j++] = buf[i];
+        } else if (x->sql_buffer[j - 1] == ' ') {
+            j--;
+        }
+    }
+    x->sql_buffer[length] = '\0';
+    free(buf);
+
+    post("sql: '%s'", x->sql_buffer);
+
     // rc = sqlite3_prepare_v2(x->db, "SELECT SQLITE_VERSION()", -1, &res, 0);  
-    rc = sqlite3_prepare_v2(x->db, s->s_name, -1, &res, 0);  
-    
+    int rc = sqlite3_prepare_v2(x->db, x->sql_buffer, -1, &res, 0);  
+
     if (rc != SQLITE_OK) {
         
         pd_error(x, "Failed to fetch data: %s", sqlite3_errmsg(x->db));
@@ -103,7 +131,6 @@ void sql3_symbol(t_sql3 *x, t_symbol *s) {
     }
     
     sqlite3_finalize(res);
-    sqlite3_close(x->db);
     
 }
 
@@ -159,26 +186,26 @@ void *sql3_new(void)
 
     // initialize params
     x->currentdir = canvas_getcurrentdir()->s_name;
-    post("project_path: %s", x->currentdir);
+    DEBUG(post("project_path: %s", x->currentdir));
     strcpy(x->db_path, "");
     x->db_state = CLOSED;
 
     return (void *)x;
 }
 
-// void sql_free(t_sql3 *x) {
-//     sqlite3_close(x->db);
-// }
+void sql3_free(t_sql3 *x) {
+    sql3_close(x);
+}
 
 
 void sql3_setup(void) {
 
     sql3_class = class_new(gensym("sql3"),
-                               (t_newmethod)sql3_new,
-                               0, // (t_method)sql3_free, 
-                               sizeof(t_sql3),
-                               CLASS_DEFAULT,
-                               0);
+                           (t_newmethod)sql3_new,
+                           (t_method)sql3_free, 
+                           sizeof(t_sql3),
+                           CLASS_DEFAULT,
+                           0);
 
     class_addbang(sql3_class, sql3_bang);
     class_addsymbol(sql3_class, sql3_symbol);

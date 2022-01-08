@@ -22,6 +22,11 @@ The idea is to have, if possible, a very simple (1 inlet, 1 outlet) sqlite3 wrap
 
 This work is currently being developed in the `sql3.c` object.
 
+- [x] fix text input / comma escape problem (partial hackish fix)
+- [x] create table
+- [x] insert into
+- [ ] select 
+
 ### Current State
 
 The current implemented flow which was 'borrowed' from Iain Duncan's Scheme-for-PD converts a list to a symbol as follows:
