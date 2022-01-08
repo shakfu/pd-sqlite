@@ -37,7 +37,7 @@ typedef struct _sql3 {
 // utility functions
 // ---------------------------------------------------------------------------
 
-void combine(char* destination, const char* path1, const char* path2)
+void path_combine(char* destination, const char* path1, const char* path2)
 {
     if(path1 == NULL && path2 == NULL) {
         strcpy(destination, "");;
@@ -130,7 +130,7 @@ void sql3_open(t_sql3 *x, t_symbol *s) {
     } else {
         if (s->s_name[0] != '/') {
             // assumes db is in same folder as external
-            combine(x->db_path, x->currentdir, s->s_name);
+            path_combine(x->db_path, x->currentdir, s->s_name);
         } else {
             // assumes absolute path is provided
             strcpy(x->db_path, s->s_name);
