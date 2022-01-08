@@ -12,5 +12,4 @@ class.sources := SQLdb.c SQLquery.c
 
 datafiles = $(wildcard *.pd)
 
-PDLIBBUILDER_DIR=../../pd-lib-builder
-include $(PDLIBBUILDER_DIR)/Makefile.pdlibbuilder
+include ../..//Makefile.pdlibbuilder

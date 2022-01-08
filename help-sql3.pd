@@ -1,0 +1,27 @@
+#N canvas 292 249 792 409 12;
+#X obj 166 286 sql3;
+#X obj 184 259 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X obj 166 191 fudiformat -u;
+#X obj 166 232 list tosymbol;
+#X msg 166 119 select sqlite_version();
+#X obj 287 231 print;
+#X msg 178 147 a \, b;
+#X msg 355 150 create table person ( id integer primary key | name
+text );
+#X msg 104 87 open :memory:;
+#X msg 52 58 open my.db;
+#X msg 46 245 close;
+#X msg 355 119 create table person ( id integer primary key \, name
+text );
+#X connect 1 0 0 0;
+#X connect 2 0 3 0;
+#X connect 2 0 5 0;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 2 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 11 0 2 0;

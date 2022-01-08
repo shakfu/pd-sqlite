@@ -12,7 +12,6 @@ class.sources := sqlite3db.c
 
 datafiles = $(wildcard *.pd)
 
-PDLIBBUILDER_DIR=../../pd-lib-builder
-include $(PDLIBBUILDER_DIR)/Makefile.pdlibbuilder
+include ../../Makefile.pdlibbuilder
 
 

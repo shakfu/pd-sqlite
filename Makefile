@@ -6,13 +6,12 @@ MACOS_VER=10.15
 cflags += -std=c99 -ftree-vectorize -mmacosx-version-min=$(MACOS_VER) $(INCLUDE)
 ldflags += -lz $(LIBS)
 
-lib.name = sql
+lib.name = sql3
 
-class.sources := sql.c
+class.sources := sql3.c
 
-datafiles = help-sql.pd
+datafiles = help-sql3.pd
 
-PDLIBBUILDER_DIR=pd-lib-builder
-include $(PDLIBBUILDER_DIR)/Makefile.pdlibbuilder
+include Makefile.pdlibbuilder
 
 
