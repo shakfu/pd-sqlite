@@ -26,6 +26,7 @@ This work is currently being developed in the `sql3.c` object.
 - [x] create table
 - [x] insert into
 - [ ] select 
+- [ ] experiment with cpp wrapper [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp)
 
 ### Current State
 

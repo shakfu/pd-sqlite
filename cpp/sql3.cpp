@@ -5,6 +5,14 @@
 
 #include <sqlite3.h>
 
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+
+#include <SQLiteCpp/SQLiteCpp.h>
+#include <SQLiteCpp/VariadicBind.h>
+
 
 #define DEBUG(x) x
 // #define DEBUG(x)
@@ -197,6 +205,7 @@ void sql3_free(t_sql3 *x) {
     sql3_close(x);
 }
 
+extern "C" {
 
 void sql3_setup(void) {
 
@@ -205,12 +214,13 @@ void sql3_setup(void) {
                            (t_method)sql3_free, 
                            sizeof(t_sql3),
                            CLASS_DEFAULT,
-                           0);
+                           A_NULL);
 
     class_addbang(sql3_class, sql3_bang);
     class_addsymbol(sql3_class, sql3_symbol);
 
-    class_addmethod(sql3_class, (t_method)sql3_open, gensym("open"), A_SYMBOL, 0);
-    class_addmethod(sql3_class, (t_method)sql3_close, gensym("close"), 0);
+    class_addmethod(sql3_class, (t_method)sql3_open, gensym("open"), A_SYMBOL, A_NULL);
+    class_addmethod(sql3_class, (t_method)sql3_close, gensym("close"), A_NULL);
 }
 
+}
